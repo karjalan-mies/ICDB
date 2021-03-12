@@ -9,7 +9,6 @@ class People(Base):
     last_name = Column(String(80))
     patronymic = Column(String(80))
     birth_date = Column(Date)
-    death_date = Column(Date)
     gender = Column(Integer)  #Внешний ключ на таблицу 'gender'
     address = Column(Integer)  #Внешний ключ на таблицу 'relation_to_addres'
 
@@ -76,7 +75,7 @@ class Organization(Base):
 class Address(Base):              #
     __tablename__ = 'address'     #
     id_address = Column(Integer, primary_key=True)  #
-    full_address = Column(String)
+    full_address = Column(Integer)
     house_number = Column(Integer)
     building = Column(String(5))
     possession = Column(String(5))
@@ -86,7 +85,7 @@ class Address(Base):              #
         return f'Адрес {self.id_address} {self.full_address}'
 
 class FullAddress(Base):
-    __tablename__ = 'full_adres'
+    __tablename__ = 'full_address'
     id_full_address = Column(Integer, primary_key=True)
     address = Column(String)
 
@@ -118,6 +117,14 @@ class Color(Base):
     __tablename__ = 'color'
     id_color = Column(Integer, primary_key=True)
     color = Column(String(100))
+
+'''  Сущность "Страховой случай"  '''
+class InsuranceEvent(Base):
+    __tablename__ = 'event'
+    id_event = Column(Integer, primary_key=True)
+    date_event = Column(Date)
+    type_event = Column(String(100))
+    participants = Column(Integer)  #Внешний ключ на таблицу "people" и "organization"
 
 if __name__ == '__main__':
     Base.metadata.create_all(bind=engine)

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h2>{{ title }}:</h2>
+
+<form method='POST' action='/address'>
+<table>
+<tr><td>Город, район, улица: </td><td><input full_address='full_address' type='TEXT', width='60'></td></tr>
+<tr><td>Дом: </td><td><input house_number='house_number' type='TEXT', width='60'></td></tr>
+<tr><td>Корпус: </td><td><input building='building' type='TEXT' ></td></tr>
+<tr><td>Строение: </td><td><input possession='possession' type='TEXT', width='60'></td></tr>
+<tr><td>Квартира: </td><td><input apartment='apartment' type='TEXT', width='60'></td></tr>
+</table>
+</form>
+
+{% endblock %}

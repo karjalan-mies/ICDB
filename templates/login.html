@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<form method='POST' action='/login'>
+<table>
+    <p><h2>Вход в систему:</h2></p>
+<tr><td>Login:</td><td><input name='login' type='TEXT' width='60'></td></tr>
+<tr><td>Password</td><td><input name='password' type='TEXT' ></td></tr>
+</table>
+<p>Для входа нажмите кнопку</p>
+<p><input value='Войти' type='SUBMIT'></p>
+</form>
+
+{% endblock %}
