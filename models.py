@@ -1,130 +1,150 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy.orm import relationship
 from db import Base, engine
 
-'''  Сущность "Физические лица"  '''
+
+class TypeRelation(Base):
+    __tablename__ = 'type_relation'
+    id = Column(Integer, primary_key=True)
+    type_relation = Column(String(100))
+
+
+class RelationToAddress(Base):
+    __tablename__ = 'relation_to_address'
+    peoples_id = Column(Integer, ForeignKey('peoples.id'), primary_key=True)
+    address_id = Column(Integer, ForeignKey('address.id'), primary_key=True)
+    organization_id = Column(Integer, ForeignKey('organization.id'), primary_key=True)
+    relation_type = Column(Integer, ForeignKey(TypeRelation.id), index=True, nullable=False)
+
+    peoples = relationship('People', backref='address_associations')
+    peoples_address = relationship('Address', backref='peoples_associations')
+    organizations_address = relationship('Address', backref='organizations_associations')
+    organizations = relationship('Organization', backref='address_associations')
+
+
+# Сущность Физическое лицо
+class Gender(Base):
+    __tablename__ = "gender"
+    id = Column(Integer, primary_key=True)
+    gender = Column(String(7))
+
+
 class People(Base):
     __tablename__ = 'peoples'
-    id_people = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     first_name = Column(String(80))
     last_name = Column(String(80))
     patronymic = Column(String(80))
     birth_date = Column(Date)
-    gender = Column(Integer)  #Внешний ключ на таблицу 'gender'
-    address = Column(Integer)  #Внешний ключ на таблицу 'relation_to_addres'
+    gender_id = Column(Integer, ForeignKey(Gender.id), index=True, nullable=False)
+    address = relationship('RelationToAddress', secondary='relation_to_address',)
 
     def __repr__(self):
-        return f'People {self.id_people} {self.last_name} {self.first_name} {self.patronymic} {self.birth_date}'
+        return f'People {self.id} {self.last_name} {self.first_name} {self.patronymic} {self.birth_date}'
 
-class Gender(Base):
-    __tablename__ = 'gender'
-    id_gender = Column(Integer, primary_key=True)
-    gender = Column(String(7))
 
-class RelationToAddress(Base):
-    __tablename__ = 'relation_from_people_to_address'
-    id_relation = Column(Integer, primary_key=True)
-    type_relation = Column(Integer)  #Внешний клчю на таблицу 'type_relation'
-    people = Column(Integer)  #Внешний клчю на таблицу 'people'
-    address = Column(Integer)  #Внешний клчю на таблицу 'address'
-
-class TypeRelation(Base):
-    __tablename__ = 'type_relation'
-    id_type_relation = Column(Integer, primary_key=True)
-    type_relation = Column(String(100))  #Проживает, Зарегистрирован, Ранее проживал, Ранее был зарегистрирован
-
-'''  Сущность "Страховой полис"  '''
-class InsurancePolicy(Base):
-    __tablename__ = 'insurance_policy'
-    id_policy = Column(Integer, primary_key=True)
-    series = Column(String)
-    number = Column(Integer)
-    date_of_issue = Column(Date)
-    type = Column(Integer)  # Внешний ключ на таблицу "type_of_policy"
-    name_of_company = Column(Integer)  #Внешний ключ на таблицу 'name_of_company'
-
-    def __repr__(self):
-        return f'<Policy {self.id_policy} {self.series} {self.number}>'
-
+# Сущность Страховой полис
 class TypeOfPolicy(Base):
     __tablename__ = 'type_of_policy'
-    id_type_of_policy = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     type = Column(String)
+
 
 class NameOfCompany(Base):
     __tablename__ = 'name_of_company'
-    id_name_of_company = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String)
 
-'''  Сущность "Организация" '''
-class Organization(Base):
-    __tablename__ = 'organization'
-    id_organization = Column(Integer, primary_key=True)
-    name = Column(String(300))
-    inn = Column(Integer)
-    address = Column(Integer)  #Внешний ключ на таблицу 'Адреса'
-    director = Column(Integer)  #Внешний ключ на таблицу 'Peoples'
+
+class InsurancePolicy(Base):
+    __tablename__ = 'insurance_policy'
+    id = Column(Integer, primary_key=True)
+    series = Column(String)
+    number = Column(Integer)
+    date_of_issue = Column(Date)
+    type = Column(Integer, ForeignKey(TypeOfPolicy.id), index=True, nullable=False)
+    name_of_company = Column(Integer, ForeignKey(NameOfCompany.id), index=True, nullable=False)
 
     def __repr__(self):
-        return f'Организация {self.id_organization} {self.name} {self.inn}'
+        return f'<Policy {self.id} {self.series} {self.number}>'
 
-'''  Сущность "Адреса"  '''
-'''
-Будет простой словарь, где каждому дому будет соответствовать одна запись, содержащая субъект, город, район и улицу.
-В дальнейшем можно переделать в составной словарь, где субъект, город, район и улица будут самостоятельными словарями
-'''
-class Address(Base):              #
-    __tablename__ = 'address'     #
-    id_address = Column(Integer, primary_key=True)  #
-    full_address = Column(Integer)
+
+# Сущность Организация
+class Organization(Base):
+    __tablename__ = 'organization'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(300))
+    inn = Column(Integer)
+    address = relationship('RelationToAddress', secondary='relation_to_address',)
+    director = Column(Integer, ForeignKey(People.id), index=True, nullable=False)
+
+    def __repr__(self):
+        return f'Организация {self.id} {self.name} {self.inn}'
+
+
+# Сущность Адрес
+class FullAddress(Base):
+    __tablename__ = 'full_address'
+    id = Column(Integer, primary_key=True)
+    address = Column(String)
+
+
+class Address(Base):
+    __tablename__ = 'address'
+    id = Column(Integer, primary_key=True)
+    full_address = Column(Integer, ForeignKey(FullAddress.id), index=True, nullable=False)
     house_number = Column(Integer)
     building = Column(String(5))
     possession = Column(String(5))
     apartment = Column(Integer)
+    peoples = relationship('RelationToAddress', secondary='relation_to_address',)
+    organizations = relationship('RelationToAddress', secondary='relation_to_address',)
 
     def __repr__(self):
-        return f'Адрес {self.id_address} {self.full_address}'
+        return f'Адрес {self.id} {self.full_address}'
 
-class FullAddress(Base):
-    __tablename__ = 'full_address'
-    id_full_address = Column(Integer, primary_key=True)
-    address = Column(String)
 
-'''  Сущность "Транспортное средство"  '''
-class Transport(Base):
-    __tablename__ = 'transport'
-    id_transport = Column(Integer, primary_key=True)
-    reg_number = Column(String(10))
-    VIN = Column(String(17))
-    brand = Column(Integer)  #Внешний ключ на таблицу 'brand'
-    model = Column(Integer)  #Внешний ключ на таблицу 'model'
-    color = Column(Integer)  #Внешний ключ на таблицу 'color'
-    owner = Column(Integer)  #Внешний ключ на таблицу 'peoples'
+# Сущность Транспортное средство
+class ModelAutomobile(Base):
+    __tablename__ = 'model_automobile'
+    id = Column(Integer, primary_key=True)
+    model_automobile = Column(String(100))
 
-    def __repr__(self):
-        return f'Транспортное средство {self.id_transport} {self.brand} {self.model} {self.reg_number}'
-
-class Model(Base):
-    __tablename__ = 'model'
-    id_model = Column(Integer, primary_key=True)
-    model = Column(String(100))
 
 class Brand(Base):
     __tablename__ = 'brand'
-    id_brand = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     brand = Column(String(100))
+
 
 class Color(Base):
     __tablename__ = 'color'
-    id_color = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     color = Column(String(100))
 
-'''  Сущность "Страховой случай"  '''
+
+class Transport(Base):
+    __tablename__ = 'transport'
+    id = Column(Integer, primary_key=True)
+    reg_number = Column(String(10))
+    VIN = Column(String(17))
+    brand = Column(Integer, ForeignKey(Brand.id), index=True, nullable=False)
+    model_automobile = Column(Integer, ForeignKey(ModelAutomobile.id), index=True, nullable=False)
+    color = Column(Integer, ForeignKey(Color.id), index=True, nullable=False)
+    owner = Column(Integer, ForeignKey(People.id), index=True, nullable=False)
+
+    def __repr__(self):
+        return f'Транспортное средство {self.id} {self.brand} {self.model_automobile} {self.reg_number}'
+
+
+# Сущность Страховой случай
 class InsuranceEvent(Base):
     __tablename__ = 'event'
-    id_event = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     date_event = Column(Date)
     type_event = Column(String(100))
-    participants = Column(Integer)  #Внешний ключ на таблицу "people" и "organization"
+    participants = Column(Integer, ForeignKey(People.id), index=True, nullable=False)
+
 
 if __name__ == '__main__':
     Base.metadata.create_all(bind=engine)
