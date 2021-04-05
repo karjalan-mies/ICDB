@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 import settings
 
-engine = create_engine(settings.MY_POSTGRES_DATABASE)
+engine = create_engine(settings.MY_POSTGRES_TEST_DATABASE)
 
 db_session = scoped_session(sessionmaker(bind=engine))
 
