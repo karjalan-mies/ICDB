@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>{{ title }}:</h2>
+
+<form method='POST' action='/transport'>
+<table>
+<tr><td>Регстарционный знак: </td><td><input reg_number='first_name' type='TEXT' width='60'></td></tr>
+<tr><td>VIN: </td><td><input VIN='VIN' type='TEXT' ></td></tr>
+<tr><td>Марка: </td><td><input brand='brand' type='TEXT' ></td></tr>
+<tr><td>Модель: </td><td><input model='model' type='TEXT' ></td></tr>
+<tr><td>Цвет: </td><td><input color='color' type='TEXT' ></td></tr>
+<tr><td>Владелец: </td><td><input owner='owner' type='TEXT' ></td></tr>
+</table>
+</form>
+
+{% endblock %}

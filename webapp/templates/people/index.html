@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>{{ title }}:</h2>
+
+<form method='POST' action='/people'>
+<table>
+<tr><td>Фамилия</td><td><input surname='last_name' type='TEXT' width='60'></td></tr>
+<tr><td>Имя</td><td><input name='first_name' type='TEXT' ></td></tr>
+<tr><td>Отчество</td><td><input patronymic='patronymic' type='TEXT' ></td></tr>
+<tr><td>Дата рождения</td><td><input birth_date='birth_date' type='date' ></td></tr>
+<tr><td>Пол</td><td><input gender='gender' type='TEXT' ></td></tr>
+<tr><td>Адрес</td><td><input address='address' type='TEXT' ></td></tr>
+</table>
+</form>
+
+{% endblock %}

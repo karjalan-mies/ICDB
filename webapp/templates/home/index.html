@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h2>{{ the_title }}</h2>
+
+<form method='POST' action='/login'>
+{% block content %}
+    <table>
+        <p><h2>Навигация:</h2></p>
+        <tr><h3><a href='http://127.0.0.1:5000/people/' >Физические лица</a>></h3></tr>
+        <tr><h3><a href='http://127.0.0.1:5000/policy/' >Страховой полис</a>></h3></tr>
+        <tr><h3><a href='http://127.0.0.1:5000/company/' >Компании</a>></h3></tr>
+        <tr><h3><a href='http://127.0.0.1:5000/address/' >Адреса</a>></h3></tr>
+        <tr><h3><a href='http://127.0.0.1:5000/transport/' >Транспортные средства</a>></h3></tr>
+        <tr><h3><a href='http://127.0.0.1:5000/event/' >Страховой случай</a>></h3></tr>
+    </table>
+{% endblock %}
+</form>
+
+{% endblock %}

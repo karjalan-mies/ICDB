@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>{{ title }}:</h2>
+
+<form method='POST' action='/organization'>
+<table>
+<tr><td>Название</td><td><input name='name' type='TEXT', width='60'></td></tr>
+<tr><td>ИНН</td><td><input inn='inn' type='TEXT', width='60'></td></tr>
+<tr><td>Адрес</td><td><input address='address' type='TEXT' ></td></tr>
+<tr><td>Руководитель</td><td><input director='director' type='TEXT', width='60'></td></tr>
+</table>
+</form>
+
+{% endblock %}

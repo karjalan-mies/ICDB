@@ -1,11 +1,18 @@
-from flask import Flask, render_template, flash, redirect, url_for
-from flask import current_app
-from flask_login import LoginManager, current_user, login_required, login_user, logout_user
-from flask_migrate import Migrate
+from flask import Flask
+from flask_login import LoginManager
 
-from webapp.forms import LoginForm
-from webapp.models import db, User
-
+from webapp.admin.views import blueprint as admin_blueprint
+from webapp.address.views import blueprint as address_blueprint
+from webapp.db import db
+from webapp.company.views import blueprint as company_blueprint
+from webapp.event.views import blueprint as event_blueprint
+from webapp.home.views import blueprint as home_blueprint
+from webapp.people.views import blueprint as people_blueprint
+from webapp.policy.views import blueprint as policy_blueprint
+from webapp.transport.views import blueprint as transport_blueprint
+from webapp.user.forms import LoginForm
+from webapp.user.models import User
+from webapp.user.views import blueprint as user_blueprint
 
 def create_app():
     app = Flask(__name__)
@@ -14,85 +21,18 @@ def create_app():
 
     login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = 'login'
-
+    login_manager.login_view = 'user.login'
+    app.register_blueprint(admin_blueprint)
+    app.register_blueprint(address_blueprint)
+    app.register_blueprint(company_blueprint)
+    app.register_blueprint(event_blueprint)
+    app.register_blueprint(home_blueprint)
+    app.register_blueprint(people_blueprint)
+    app.register_blueprint(policy_blueprint)
+    app.register_blueprint(transport_blueprint)
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(user_id)
-
-
-    @app.route('/index')
-    def index():
-        title = 'Банк данных страховой компании'
-        return render_template('index.html', title=title)
-
-    @app.route('/login')
-    def login():
-        if current_user.is_authenticated:
-            return redirect(url_for('index'))
-        title = 'Страница авторизации'
-        login_form = LoginForm()
-        return render_template('login.html', title=title, login_form=login_form)
-
-
-    @app.route('/process_login', methods=['POST'])
-    def process_login():
-        form = LoginForm()
-        if form.validate_on_submit():
-            user = User.query.filter(User.username == form.username.data).first()
-            if user and user.check_password(form.password.data):
-                login_user(user)
-                flash('Вы успешно вошли на сайт')
-                return redirect(url_for('index'))
-
-        flash('Не правильное имя пользователя или пароль')
-        return redirect(url_for('login'))
-
-    @app.route('/logout')
-    def logout():
-        logout_user()
-        flash('Вы успешнь разлогинились')
-        return redirect(url_for('index'))
-
-
-    @app.route('/admin')
-    @login_required
-    def admin_index():
-        if current_user.is_admin:
-            return 'Привет админ!'
-        else:
-            return 'Ты не админ!'
-
-
-    @app.route('/people')
-    def people():
-        title = 'Ввод физических лиц'
-        return render_template('people.html', title=title)
-
-    @app.route('/policy')
-    def policy():
-        title = 'Ввод полисов'
-        return render_template('policy.html', title=title)
-
-    @app.route('/organization')
-    def organization():
-        title = 'Ввод организаций'
-        return render_template('organization.html', title=title)
-
-    @app.route('/address')
-    def address():
-        title = 'Ввод адресов'
-        return render_template('address.html', title=title)
-
-    @app.route('/transport')
-    def transport():
-        title = 'Ввод транспортных средств'
-        return render_template('transport.html', title=title)
-
-    @app.route('/event')
-    def event():
-        title = 'Страховой случай'
-        return render_template('event.html', title=title)
 
     return app
