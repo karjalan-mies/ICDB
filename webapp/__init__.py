@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
+from flask_migrate import Migrate
 
 from webapp.admin.views import blueprint as admin_blueprint
 from webapp.address.views import blueprint as address_blueprint
@@ -18,10 +19,12 @@ def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
     db.init_app(app)
+    migrate = Migrate(app, db)
 
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_view = 'user.login'
+
     app.register_blueprint(admin_blueprint)
     app.register_blueprint(address_blueprint)
     app.register_blueprint(company_blueprint)
