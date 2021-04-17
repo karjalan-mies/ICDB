@@ -1,18 +1,48 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<h2>{{ title }}:</h2>
-
-<form method='POST' action='/people'>
-<table>
-<tr><td>Фамилия</td><td><input surname='last_name' type='TEXT' width='60'></td></tr>
-<tr><td>Имя</td><td><input name='first_name' type='TEXT' ></td></tr>
-<tr><td>Отчество</td><td><input patronymic='patronymic' type='TEXT' ></td></tr>
-<tr><td>Дата рождения</td><td><input birth_date='birth_date' type='date' ></td></tr>
-<tr><td>Пол</td><td><input gender='gender' type='TEXT' ></td></tr>
-<tr><td>Адрес</td><td><input address='address' type='TEXT' ></td></tr>
-</table>
+{% include('messages.html') %}
+<form method='POST' action="{{ url_for('people.process_save') }}" method="POST">
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                {{ people_form.last_name.label }}
+                {{ people_form.last_name }}
+            </div>
+            <div class="form-group">
+                {{ people_form.first_name.label }}
+                {{ people_form.first_name }}
+            </div>
+            <div class="form-group">
+                {{ people_form.patronymic.label }}
+                {{ people_form.patronymic }}
+            </div>
+            <div class="form-group">
+                {{ people_form.birth_date.label }}
+                {{ people_form.birth_date }}
+            </div><br>
+            {% if current_user.is_admin %}
+            <div class="form-group">
+                {{ people_form.delete }}
+            </div><br>
+            {% endif %}
+            <div class="form-group">
+                {{ people_form.save }}
+            </div><br>
+            <div class="row">
+                <div class="col-2">
+                    <div class="form-group">
+                        {{ people_form.prev }}
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        {{ people_form.next }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 
 {% endblock %}

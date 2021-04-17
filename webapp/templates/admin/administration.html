@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include('messages.html') %}
+    <div class="row">
+        <div class="col-4">
+            <form action="" method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group"><button><a href="{{ url_for('admin.register') }}">Регистрация пользователей
+                                                    </a></button></div><br>
+                <div class="form-group"><button><a href="{{ url_for('admin.register') }}">Копирование банка данных
+                                                    </a></button></div><br>
+                <div class="form-group"><button><a href="{{ url_for('admin.register') }}">Работа с индексами
+                                                    </a></button></div><br>
+
+            </form>
+        </div>
+        <div class="col-8">
+
+        </div>
+    </div>
+{% endblock %}

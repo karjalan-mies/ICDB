@@ -1,16 +1,47 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% include('messages.html') %}
+<form method='POST' action="{{ url_for('company.process_save') }}" method="POST">
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                {{ company_form.name.label }}
+                {{ company_form.name }}
+            </div>
+            <div class="form-group">
+                {{ company_form.inn.label }}
+                {{ company_form.inn }}
+            </div>
+            <div class="form-group">
+                {{ company_form.address.label }}
+                {{ company_form.address }}
+            </div>
+            <div class="form-group">
+                {{ company_form.director.label }}
+                {{ company_form.director }}
+            </div><br>
 
-<h2>{{ title }}:</h2>
-
-<form method='POST' action='/organization'>
-<table>
-<tr><td>Название</td><td><input name='name' type='TEXT', width='60'></td></tr>
-<tr><td>ИНН</td><td><input inn='inn' type='TEXT', width='60'></td></tr>
-<tr><td>Адрес</td><td><input address='address' type='TEXT' ></td></tr>
-<tr><td>Руководитель</td><td><input director='director' type='TEXT', width='60'></td></tr>
-</table>
+            <div class="form-group">
+                {{ company_form.delete }}
+            </div><br>
+            <div class="form-group">
+                {{ company_form.save }}
+            </div><br>
+            <div class="row">
+                <div class="col-2">
+                    <div class="form-group">
+                        {{ company_form.prev }}
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        {{ company_form.next }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 
 {% endblock %}

@@ -1,10 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, StringField, PasswordField, SubmitField
+from wtforms import SubmitField
 from wtforms.validators import DataRequired
 
 
 class HomePageForm(FlaskForm):
-    username = StringField('Имя пользователя', validators=[DataRequired()], render_kw={'class': 'form-control'})
-    password = PasswordField('Пароль', validators=[DataRequired()], render_kw={'class': 'form-control'})
-    remember_me = BooleanField('Запомнить меня', default=True, render_kw={'class': 'form-check-input'})
-    submit = SubmitField('Отправить!', render_kw={'class': 'btn btn-primary'})
+    people = SubmitField('Физические лица', render_kw={'class': 'btn btn-primary'})
+    policy = SubmitField('Страховые полисы', render_kw={'class': 'btn btn-primary'})
+    company = SubmitField('Компании', render_kw={'class': 'btn btn-primary'})
+    address = SubmitField('Адреса', render_kw={'class': 'btn btn-primary'})
+    transport = SubmitField('Транспорт', render_kw={'class': 'btn btn-primary'})
+    event = SubmitField('Страховые случаи', render_kw={'class': 'btn btn-primary'})

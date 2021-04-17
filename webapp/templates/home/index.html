@@ -6,14 +6,31 @@
 
 <form method='POST' action='/login'>
 {% block content %}
+{% include('messages.html') %}
     <table>
         <p><h2>Навигация:</h2></p>
-        <tr><h3><a href='http://127.0.0.1:5000/people/' >Физические лица</a>></h3></tr>
-        <tr><h3><a href='http://127.0.0.1:5000/policy/' >Страховой полис</a>></h3></tr>
-        <tr><h3><a href='http://127.0.0.1:5000/company/' >Компании</a>></h3></tr>
-        <tr><h3><a href='http://127.0.0.1:5000/address/' >Адреса</a>></h3></tr>
-        <tr><h3><a href='http://127.0.0.1:5000/transport/' >Транспортные средства</a>></h3></tr>
-        <tr><h3><a href='http://127.0.0.1:5000/event/' >Страховой случай</a>></h3></tr>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <a href="{{ url_for('people.index') }}">{{ home_page_form.people }}</a>
+            </div><br>
+            <div class="form-group">
+                <a href="{{ url_for('company.index') }}">{{ home_page_form.company }}</a>
+            </div><br>
+            <div class="form-group">
+                <a href="{{ url_for('policy.index') }}">{{ home_page_form.policy }}</a>
+            </div><br>
+            <div class="form-group">
+                <a href="{{ url_for('address.index') }}">{{ home_page_form.address }}</a>
+            </div><br>
+            <div class="form-group">
+                <a href="{{ url_for('transport.index') }}">{{ home_page_form.transport }}</a>
+            </div><br>
+            <div class="form-group">
+                <a href="{{ url_for('event.index') }}">{{ home_page_form.event }}</a>
+            </div>
+        </div>
+    </div>
     </table>
 {% endblock %}
 </form>
